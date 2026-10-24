@@ -16,3 +16,8 @@ steps:
 
   - name: Show project files
     run: ls -la
+
+  - name: Check project structure
+    run: |
+      echo "Checking for Android project files"
+      find . -maxdepth 3 -type f | head -200
