@@ -1,21 +1,18 @@
-name: Build JarrahYar APKon:
-workflow_dispatch:
-push:
-branches:
-- main
+name: Build JarrahYar APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
 
 jobs:
-build:
-runs-on: ubuntu-latest
+  build:
+    runs-on: ubuntu-latest
 
-steps:
-  - name: Checkout repository
-    uses: actions/checkout@v4
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-  - name: Show project files
-    run: ls -la
-
-  - name: Check project structure
-    run: |
-      echo "Checking for Android project files"
-      find . -maxdepth 3 -type f | head -200
+      - name: Show project files
+        run: ls -la
