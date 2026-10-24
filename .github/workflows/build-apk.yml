@@ -1,6 +1,4 @@
-name: Build JarrahYar APK
-
-on:
+name: Build JarrahYar APKon:
 workflow_dispatch:
 push:
 branches:
