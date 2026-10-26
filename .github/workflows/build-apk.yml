@@ -14,17 +14,9 @@ steps:
   - name: Checkout repository
     uses: actions/checkout@v4
 
-  - name: Extract Android project
-    run: |
-      unzip -o JarrahYar_Android_Project_AutoBuild-1.zip -d android_project
-      echo "Extracted project files:"
-      find android_project -maxdepth 3 -type f | head -100
-
-  - name: Locate Gradle project
-    run: |
-      find android_project -name settings.gradle -o -name settings.gradle.kts
-
   - name: Show project files
     run: |
+      echo "Project files:"
       ls -la
-      ls -la android_project
+      echo "App directory:"
+      ls -la app
