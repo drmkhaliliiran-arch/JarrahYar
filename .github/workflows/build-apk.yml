@@ -1,18 +1,40 @@
 name: Build JarrahYar APK
 
 on:
-  workflow_dispatch:
-  push:
-    branches:
-      - main
+workflow_dispatch:
+push:
+branches:
+- main
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+build:
+runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+steps:
+  - name: Checkout repository
+    uses: actions/checkout@v4
 
-      - name: Show project files
-        run: ls -la
+  - name: Show project files
+    run: ls -la
+
+  - name: Set up Java
+    uses: actions/setup-java@v4
+    with:
+      distribution: temurin
+      java-version: '17'
+
+  - name: Build APK
+    run: |
+      chmod +x gradlew 2>/dev/null || true
+      if [ -f gradlew ]; then
+        ./gradlew assembleDebug
+      else
+        echo "ERROR: gradlew not found"
+        exit 1
+      fi
+
+  - name: Upload APK
+    uses: actions/upload-artifact@v4
+    with:
+      name: JarrahYar-APK
+      path: app/build/outputs/apk/debug/*.apk
