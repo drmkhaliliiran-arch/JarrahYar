@@ -1,10 +1,10 @@
 name: Build JarrahYar APK
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
-  workflow_dispatch:
 
 jobs:
   build:
@@ -14,9 +14,34 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: List files
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Extract Android project
         run: |
-          echo "Project files:"
-          ls -la
-          echo "App directory:"
-          ls -la app
+          mkdir -p project
+          unzip -q JarrahYar_Android_Project_AutoBuild-1.zip -d project
+          echo "Extracted files:"
+          find project -maxdepth 4 -type f | head -100
+
+      - name: Build APK
+        run: |
+          GRADLEW=$(find project -type f -name gradlew | head -1)
+          if [ -z "$GRADLEW" ]; then
+            echo "ERROR: gradlew not found in ZIP"
+            exit 1
+          fi
+          PROJECT_DIR=$(dirname "$GRADLEW")
+          cd "$PROJECT_DIR"
+          chmod +x gradlew
+          ./gradlew assembleDebug
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: JarrahYar-APK
+          path: project/**/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
